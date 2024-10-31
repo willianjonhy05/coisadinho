@@ -1,4 +1,4 @@
-import { View, Text, Button, StyleSheet, TextInput } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 
@@ -6,9 +6,29 @@ export default function CreateUser() {
     const [nome, setNome] = useState('');
     const [trabalho, setTrabalho] = useState('');
 
-    const handleRegister = () => {
-        alert(`Nome: ${nome}\nTrabalho: ${trabalho}`);
-     
+    const handleRegister = async () => {
+        try {
+            const response = await fetch('https://reqres.in/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: nome,
+                    job: trabalho,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                Alert.alert('Cadastro bem-sucedido', `Nome: ${data.name}\nTrabalho: ${data.job}`);
+            } else {
+                Alert.alert('Cadastro falhou', data.error || 'Erro ao cadastrar.');
+            }
+        } catch (error) {
+            Alert.alert('Erro', 'Não foi possível conectar ao servidor.');
+        }
     };
 
     return (
