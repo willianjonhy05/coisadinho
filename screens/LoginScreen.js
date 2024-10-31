@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const Inscrever = () => {
+    // Corrigido para usar navigation.navigate
+    navigation.navigate('CreateUser');
+  };
 
   const handleLogin = async () => {
     try {
@@ -27,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
         navigation.navigate('UserScreen');
       } else {
         Alert.alert('Login falhou', data.error);
-      } 
+      }
     } catch (error) {
       Alert.alert("Erro de autenticação", "Verifique as credenciais e tente novamente.");
     }
@@ -55,6 +60,9 @@ const LoginScreen = ({ navigation }) => {
           style={styles.input}
         />
         <Button title="Login" onPress={handleLogin} />
+        <TouchableOpacity style={styles.signupButton} onPress={Inscrever}>
+          <Text style={styles.signupText}>Inscreva-se</Text>
+        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
@@ -87,6 +95,18 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 15,
     borderRadius: 5,
+  },
+  signupButton: {
+    marginTop: 15,
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderRadius: 5,
+    backgroundColor: '#4CAF50',
+  },
+  signupText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
